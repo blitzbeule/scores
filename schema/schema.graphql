@@ -1,0 +1,91 @@
+
+# SCORES2 SCHEMA
+# GraphQL schema for participant
+
+# general types
+type Event implements Unique & Named {
+	id: String! @id
+	short: String! @id
+	long: String
+	description: String
+
+	competitions: [Competition!]! @hasInverse(field: event)
+}
+
+type Competition implements Unique & Named {
+	id: String! @id
+	short: String! @id
+	long: String
+	description: String
+
+	event: Event!
+	disciplines: [Discipline!]! @hasInverse(field: competitions)
+	groups: [Group!]! @hasInverse(field: competition)
+}
+
+type Discipline implements Unique & Named {
+	id: String! @id
+	short: String! @id
+	long: String
+	description: String
+
+	scoring: Scoring!
+
+	competitions: [Competition!]!
+}
+type Scoring {
+	conversionFunction: String!
+	decimalPlacesP: Int!
+	decimalPlacesV: Int!
+	pointType: ScoringPointType!
+	type: ScoringType!
+	unit: ScoringUnit!
+}
+
+type Group implements Unique & Named {
+	id: String! @id
+	short: String!  @id
+	long: String
+	description: String
+	criteria: String
+
+	competition: Competition!
+	participants: [Participant!]! @hasInverse(field: group)
+}
+
+type Participant implements Unique {
+	id: String! @id
+	name: String!
+	birth: DateTime
+
+	group: Group!
+}
+
+interface Named {
+	short: String!  @id @search(by: [term, exact])
+	long: String @search(by: [term, exact])
+}
+
+interface Unique {
+	id: String!  @id @search(by: [term, exact])
+}
+
+enum ScoringPointType {
+	LOWER_IS_BETTER
+	GREATER_IS_BETTER
+}
+enum ScoringType {
+	TIME
+	POINTS
+	ROUNDS
+	DISTANCE
+}
+enum ScoringUnit {
+	MS
+	SEC
+	MIN
+	HOURS
+	METERS
+	KMETERS
+	UNITLESS
+}
