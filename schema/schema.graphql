@@ -1,10 +1,12 @@
 
 # SCORES2 SCHEMA
 # GraphQL schema for participant
+type Mutation {
+	newEvent(short: String!, long: String, description: String)
+}
 
 # general types
-type Event implements Unique & Named {
-	id: String! @id
+type Event implements Named {
 	short: String! @id
 	long: String
 	description: String
@@ -12,8 +14,7 @@ type Event implements Unique & Named {
 	competitions: [Competition!]! @hasInverse(field: event)
 }
 
-type Competition implements Unique & Named {
-	id: String! @id
+type Competition implements Named {
 	short: String! @id
 	long: String
 	description: String
@@ -23,8 +24,7 @@ type Competition implements Unique & Named {
 	groups: [Group!]! @hasInverse(field: competition)
 }
 
-type Discipline implements Unique & Named {
-	id: String! @id
+type Discipline implements Named {
 	short: String! @id
 	long: String
 	description: String
@@ -42,8 +42,7 @@ type Scoring {
 	unit: ScoringUnit!
 }
 
-type Group implements Unique & Named {
-	id: String! @id
+type Group implements Named {
 	short: String!  @id
 	long: String
 	description: String
@@ -64,10 +63,6 @@ type Participant implements Unique {
 interface Named {
 	short: String!  @id @search(by: [term, exact])
 	long: String @search(by: [term, exact])
-}
-
-interface Unique {
-	id: String!  @id @search(by: [term, exact])
 }
 
 enum ScoringPointType {
