@@ -1,12 +1,11 @@
 import { Controller, Get } from '@nestjs/common';
-import { AppService } from './app.service';
 
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) {}
+  constructor() {}
 
   @Get()
   getHello(): string {
-    return this.appService.getHello();
+    return `<h1>scores-2 backend service</h1><br><p>This is only an api for machines not for humans. But all is up and running. Please make sure this page is not reachable outside of your private network!</p>`
   }
 }
