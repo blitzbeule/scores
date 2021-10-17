@@ -1,22 +1,19 @@
 
 # SCORES2 SCHEMA
 # GraphQL schema for participant
-type Mutation {
-	newEvent(short: String!, long: String, description: String)
-}
 
 # general types
 type Event implements Named {
-	short: String! @id
-	long: String
+	short: String! @id @search(by: [term, exact])
+	long: String @search(by: [term, exact])
 	description: String
 
 	competitions: [Competition!]! @hasInverse(field: event)
 }
 
 type Competition implements Named {
-	short: String! @id
-	long: String
+	short: String! @id @search(by: [term, exact])
+	long: String @search(by: [term, exact])
 	description: String
 
 	event: Event!
@@ -25,8 +22,8 @@ type Competition implements Named {
 }
 
 type Discipline implements Named {
-	short: String! @id
-	long: String
+	short: String! @id @search(by: [term, exact])
+	long: String @search(by: [term, exact])
 	description: String
 
 	scoring: Scoring!
@@ -43,8 +40,8 @@ type Scoring {
 }
 
 type Group implements Named {
-	short: String!  @id
-	long: String
+	short: String!  @id @search(by: [term, exact])
+	long: String @search(by: [term, exact])
 	description: String
 	criteria: String
 
@@ -52,9 +49,9 @@ type Group implements Named {
 	participants: [Participant!]! @hasInverse(field: group)
 }
 
-type Participant implements Unique {
-	id: String! @id
-	name: String!
+type Participant {
+	id: String! @id @search(by: [term, exact])
+	name: String! @search(by: [term, exact])
 	birth: DateTime
 
 	group: Group!
