@@ -1,0 +1,18 @@
+{
+  "name": "schema-injector",
+  "version": "0.1.0",
+  "description": "",
+  "main": "build/index.js",
+  "scripts": {
+    "start": "node ."
+  },
+  "author": "blitzbeule",
+  "license": "AGPL-3.0",
+  "dependencies": {
+    "axios": "^0.23.0"
+  },
+  "devDependencies": {
+    "@types/node": "^16.11.4",
+    "typescript": "^4.4.4"
+  }
+}
