@@ -13,7 +13,7 @@ services:
     volumes:
       - ./ddata:/dgraph
     restart: on-failure
-    command: dgraph alpha --my=alpha:7080 --zero=zero:5080
+    command: ./init.sh
   krakend:
     image: devopsfaith/krakend:1.4.1
     volumes:

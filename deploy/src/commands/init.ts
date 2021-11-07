@@ -2,6 +2,7 @@ import type { Arguments, CommandBuilder } from "yargs";
 import { options } from "../options";
 import fs from "fs";
 import path from "path";
+import { startContainers } from "../util/startf";
 
 type Options = {
   port: number | undefined;
@@ -17,7 +18,8 @@ export const builder: CommandBuilder<Options, Options> = (yargs) =>
     kport: { type: "number" },
   });
 
-export const handler = (argv: Arguments<Options>) => {
+export const handler = async (argv: Arguments<Options>) => {
+  process.stdout.write("Loading...\n");
   let { port, kport } = argv;
 
   if (!port) {
@@ -26,7 +28,9 @@ export const handler = (argv: Arguments<Options>) => {
   if (!kport) {
     kport = options.kport.default;
   }
+  process.stdout.write("Loaded.\n\n");
 
+  process.stdout.write("Copying files...\n");
   let rs: Replacer[] = [
     {
       name: "port",
@@ -61,8 +65,34 @@ export const handler = (argv: Arguments<Options>) => {
 
   fs.writeFileSync(path.join(process.cwd(), "/docker-compose.yml"), ndcfile);
   fs.writeFileSync(path.join(process.cwd(), "/krakend/krakend.json"), nkconf);
+  fs.copyFileSync(
+    path.join(__dirname, "../../templates/schema.graphql"),
+    path.join(path.join(process.cwd(), "/ddata/schema.graphql"))
+  );
+  fs.copyFileSync(
+    path.join(__dirname, "../../templates/init.sh"),
+    path.join(path.join(process.cwd(), "/ddata/init.sh"))
+  );
+  fs.chmodSync(path.join(process.cwd(), "/ddata/init.sh"), "755");
 
-  process.stdout.write("");
+  process.stdout.write("Files Copied.\n\n");
+
+  process.stdout.write("Configuring...\n");
+
+  let ucode = await startContainers({
+    nd: true,
+    noStart: true,
+  });
+  process.stdout.write("Successful\n");
+
+  process.stdout.write("\n\n");
+
+  process.stdout.write("################################################\n");
+  process.stdout.write("#                                              #\n");
+  process.stdout.write("# Start the application with docker-compose up #\n");
+  process.stdout.write("#                                              #\n");
+  process.stdout.write("################################################\n");
+
   process.stdout.write("\n\n");
   process.exit(0);
 };
