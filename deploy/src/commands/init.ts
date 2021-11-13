@@ -79,10 +79,8 @@ export const handler = async (argv: Arguments<Options>) => {
 
   process.stdout.write("Configuring...\n");
 
-  let ucode = await startContainers({
-    nd: true,
-    noStart: true,
-  });
+  //TODO insert better container configuration
+
   process.stdout.write("Successful\n");
 
   process.stdout.write("\n\n");
