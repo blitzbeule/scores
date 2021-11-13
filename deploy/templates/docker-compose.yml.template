@@ -1,0 +1,27 @@
+version: "3.2"
+services:
+  zero:
+    image: dgraph/dgraph:latest
+    volumes:
+      - ./ddata:/dgraph
+    restart: on-failure
+    command: dgraph zero --my=zero:5080
+  alpha:
+    image: dgraph/dgraph:latest
+    ports:
+      - "8070:8080"
+    volumes:
+      - ./ddata:/dgraph
+    restart: on-failure
+    command: ./init.sh
+  krakend:
+    image: devopsfaith/krakend:1.4.1
+    volumes:
+      - ./krakend:/etc/krakend
+    ports:
+      - "%%port%%:%%kport%%"
+    links:
+      - "alpha:dgraph"
+    depends_on:
+      - zero
+      - alpha
